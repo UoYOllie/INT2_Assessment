@@ -1,31 +1,16 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import PIL
 import tensorflow as tf
-import pathlib
-import scipy
-import numpy
 
-print("TensorFlow Version:", tf.__version__)
+import tensorflow_datasets as tfds
 
-dataset_url = "https://www.robots.ox.ac.uk/~vgg/data/flowers/102/102flowers.tgz"
-splits_url  = "https://www.robots.ox.ac.uk/~vgg/data/flowers/102/setid.mat"
-labels_url = "https://www.robots.ox.ac.uk/~vgg/data/flowers/102/imagelabels.mat"
+ds = tfds.load('oxford_flowers102', split='train', shuffle_files=True)
+assert isinstance(ds, tf.data.Dataset)
 
-
-archive = tf.keras.utils.get_file(origin=dataset_url, extract=True)
-splits_archive = tf.keras.utils.get_file(origin=splits_url)
-labels_archive = tf.keras.utils.get_file(origin=labels_url)
-
-data_dir = pathlib.Path(archive).with_suffix('')
-splits_dir = pathlib.Path(splits_archive).with_suffix('.mat')
-labels_dir = pathlib.Path(labels_archive).with_suffix('.mat')
-
-data_splits = scipy.io.loadmat(splits_dir)
-data_labels = scipy.io.loadmat(labels_dir)
-
-print(data_splits.keys())
-print(data_labels.keys())
-print(data_dir)
-
-image_count = len(list(data_dir.glob('*.jpg')))
+# builder = tfds.builder('mnist')
+# builder.download_and_prepare()
+# ds = builder.as_dataset(split='train', shuffle_files=True)
 
 
-print(image_count)
+ds.get_single_element("image")
