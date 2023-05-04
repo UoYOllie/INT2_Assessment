@@ -30,8 +30,6 @@ class CustomCallback(keras.callbacks.Callback):
         for metric in logs:
             if metric in self.metrics:
                 self.metrics[metric].append(logs.get(metric))
-            else:
-                self.metrics[metric] = [logs.get(metric)]
 
         metrics = [x for x in logs if 'val' not in x]
 
@@ -53,8 +51,14 @@ class CustomCallback(keras.callbacks.Callback):
             self.axs[i].grid()
 
         plt.tight_layout()
-        plt.show(block)
-        # plt.ion()
+
+        if (epoch == 0):
+            plt.ion()
+            plt.show()
+
+        if (plt.isinteractive() == False):
+            plt.ion()
+
         # plt.pause(0.01)
         # plt.show()
 

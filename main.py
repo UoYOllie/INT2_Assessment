@@ -1,6 +1,6 @@
 import keras.callbacks
 import matplotlib.pyplot as plt
-import pandas as pd
+import CustomCallback
 import numpy as np
 import PIL
 
@@ -69,9 +69,9 @@ model.compile('adam', loss=tf.losses.SparseCategoricalCrossentropy(from_logits=T
 model.summary()
 
 logdir = "logs"
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
+tensorboard_callback = CustomCallback.CustomCallback()
 
-hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
+hist = model.fit(ds, epochs=epochs, validation_data=ds_val, callbacks=tensorboard_callback)
 plt.figure()
 
 # plt.plot(hist.history['loss'], color='teal', label='training-loss')
