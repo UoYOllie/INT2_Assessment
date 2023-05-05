@@ -9,7 +9,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 
 batch_size = 64
-epochs = 64
+epochs = 128
 
 
 def resize_image(image, label):
@@ -39,13 +39,16 @@ model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.RandomFlip("horizontal", input_shape=(256, 256, 3)))
 #model.add(tf.keras.layers.RandomFlip("vertical"))
 
-model.add(tf.keras.layers.RandomRotation(0.8))
-model.add(tf.keras.layers.RandomZoom(0.2))
-model.add(tf.keras.layers.RandomTranslation(0.3, 0.3))
+model.add(tf.keras.layers.RandomRotation(0.5))
+model.add(tf.keras.layers.RandomZoom(0.1))
+model.add(tf.keras.layers.RandomCrop(240, 240))
+model.add(tf.keras.layers.RandomTranslation(0.1, 0.1))
+
+#model.add(tf.keras.layers.RandomWidth(0.2))
 
 # model.add(tf.keras.layers.RandomBrightness(0.1))
 
-model.add(tf.keras.layers.Conv2D(16, (3, 3), 1, padding='same', activation='relu', input_shape=(256, 256, 3)))
+model.add(tf.keras.layers.Conv2D(16, (3, 3), 1, padding='same', activation='relu'))
 model.add(tf.keras.layers.MaxPooling2D())
 
 model.add(tf.keras.layers.Conv2D(32, (3, 3), 1, padding='same', activation='relu'))
@@ -54,14 +57,13 @@ model.add(tf.keras.layers.MaxPooling2D())
 model.add(tf.keras.layers.Conv2D(64, (3, 3), 1, padding='same', activation='relu'))
 model.add(tf.keras.layers.MaxPooling2D())
 
-model.add(tf.keras.layers.Conv2D(128, (3, 3), 1, padding='same', activation='relu'))
-model.add(tf.keras.layers.MaxPooling2D())
+# model.add(tf.keras.layers.Conv2D(128, (3, 3), 1, padding='same', activation='relu'))
 
-model.add(tf.keras.layers.Dropout(0.3))
+model.add(tf.keras.layers.Dropout(0.2))
 
 model.add(tf.keras.layers.Flatten())
 
-model.add(tf.keras.layers.Dense(512, activation='relu'))
+model.add(tf.keras.layers.Dense(256, activation='relu'))
 model.add(tf.keras.layers.Dense(102, activation='softmax'))
 
 model.compile('adam', loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
@@ -71,7 +73,7 @@ model.summary()
 logdir = "logs"
 tensorboard_callback = CustomCallback.CustomCallback()
 
-hist = model.fit(ds, epochs=epochs, validation_data=ds_val, callbacks=tensorboard_callback)
+hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
 plt.figure()
 
 # plt.plot(hist.history['loss'], color='teal', label='training-loss')

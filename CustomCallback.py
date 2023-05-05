@@ -11,13 +11,8 @@ class CustomCallback(keras.callbacks.Callback):
         keys = list(logs.keys())
         print("Starting training; got log keys: {}".format(keys))
 
-
-
-        self.metrics = {}
-        for metric in logs:
-            self.metrics[metric] = []
-
-
+        self.metrics = {"val_accuracy" : [],
+                        "accuracy" : []}
 
     def on_train_end(self, logs=None):
         pass
@@ -31,21 +26,15 @@ class CustomCallback(keras.callbacks.Callback):
             if metric in self.metrics:
                 self.metrics[metric].append(logs.get(metric))
 
-        metrics = [x for x in logs if 'val' not in x]
-
         if epoch == 0:
             self.f, self.axs = plt.subplots(1, len(self.metrics), figsize=(15, 5))
 
         #clear_output(wait=True)
 
-        for i, metric in enumerate(metrics):
+        for i, metric in enumerate(self.metrics):
             self.axs[i].plot(range(1, epoch + 2),
                         self.metrics[metric],
                         label=metric)
-            if logs['val_' + metric]:
-                self.axs[i].plot(range(1, epoch + 2),
-                            self.metrics['val_' + metric],
-                            label='val_' + metric)
 
             self.axs[i].legend()
             self.axs[i].grid()
