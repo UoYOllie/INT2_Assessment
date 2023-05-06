@@ -18,7 +18,8 @@ def resize_image(image, label):
 test_ds = test_ds.map(resize_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(batch_size).prefetch(
     tf.data.experimental.AUTOTUNE)
 
-# Loading and summarising the model:
+
+# Loading and summarising the model, name of the saved model in brackets:
 
 new_model = tf.keras.models.load_model(MODEL_PREFIX+MODEL_NAME)
 new_model.summary()
@@ -26,7 +27,5 @@ new_model.summary()
 
 # Checking the accuracy of the model:
 
-# test_images = test_ds['image']
-# test_labels = test_ds['image']
 loss, acc = new_model.evaluate(test_ds, verbose=2)
 print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))

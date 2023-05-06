@@ -7,12 +7,17 @@ import PIL
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
+import tensorboard
+
+logdir = "logs/fit/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
+
 
 MODEL_PREFIX = "models/"
 MODEL_NAME = "model3.h5"
 
 batch_size = 64
-epochs = 64
+epochs = 10
 
 
 now = datetime.now()
@@ -79,15 +84,13 @@ model.compile('adam', loss=tf.losses.SparseCategoricalCrossentropy(), metrics=['
 model.summary()
 
 
-
-
-logdir = "logs"
-tensorboard_callback = CustomCallback.CustomCallback()
+# logdir = "logs"
+# tensorboard_callback = CustomCallback.CustomCallback()
 
 start_time = now.strftime("%H:%M:%S")
 print("Start Time:", start_time)
 
-hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
+hist = model.fit(ds, epochs=epochs, validation_data=ds_val, callbacks=[tensorboard_callback])
 
 
 # Saves the current model to the program folders with the name in brackets:
