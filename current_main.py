@@ -9,7 +9,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 
 batch_size = 64
-epochs = 256
+epochs = 1
 
 
 now = datetime.now()
@@ -87,6 +87,9 @@ print("Start Time:", start_time)
 hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
 
 
+# Saves the current model to the program folders with the name in brackets:
+
+model.save('my_model_test.h5')
 
 
 now = datetime.now()
