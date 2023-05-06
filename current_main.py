@@ -8,8 +8,11 @@ import PIL
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
+MODEL_PREFIX = "models/"
+MODEL_NAME = "model3.h5"
+
 batch_size = 64
-epochs = 1
+epochs = 64
 
 
 now = datetime.now()
@@ -50,18 +53,18 @@ model.add(tf.keras.layers.RandomTranslation(0.3, 0.3))
 # model.add(tf.keras.layers.RandomBrightness(0.1))
 
 model.add(tf.keras.layers.Conv2D(16, (3, 3), 1, padding='same', activation='relu'))
-model.add(tf.keras.layers.MaxPooling2D())
+model.add(tf.keras.layers.AveragePooling2D())
 # model.add(tf.keras.layers.BatchNormalization())
 
 model.add(tf.keras.layers.Conv2D(32, (3, 3), 1, padding='same', activation='relu'))
-model.add(tf.keras.layers.MaxPooling2D())
+model.add(tf.keras.layers.AveragePooling2D())
 
 model.add(tf.keras.layers.Conv2D(64, (3, 3), 1, padding='same', activation='relu'))
-model.add(tf.keras.layers.MaxPooling2D())
+model.add(tf.keras.layers.AveragePooling2D())
 # model.add(tf.keras.layers.BatchNormalization())
 # model.add(tf.keras.layers.Conv2D(128, (3, 3), 1, padding='same', activation='relu'))
 
-model.add(tf.keras.layers.Dropout(0.4))
+model.add(tf.keras.layers.SpatialDropout2D(0.4))
 
 model.add(tf.keras.layers.Flatten())
 
@@ -89,7 +92,7 @@ hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
 
 # Saves the current model to the program folders with the name in brackets:
 
-model.save('my_model_test.h5')
+model.save(MODEL_PREFIX+MODEL_NAME)
 
 
 now = datetime.now()
@@ -98,7 +101,6 @@ current_time = now.strftime("%H:%M:%S")
 print("Start Time:", start_time)
 print("End Time:", current_time)
 
-model.save('models/model1')
 plt.figure()
 
 # plt.plot(hist.history['loss'], color='teal', label='training-loss')

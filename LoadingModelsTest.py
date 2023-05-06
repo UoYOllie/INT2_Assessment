@@ -1,6 +1,9 @@
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
+
+MODEL_PREFIX = "models/"
+MODEL_NAME = "model2.h5"
 batch_size = 64
 
 test_ds = tfds.load('oxford_flowers102', split='test', shuffle_files=True)
@@ -17,7 +20,7 @@ test_ds = test_ds.map(resize_image, num_parallel_calls=tf.data.experimental.AUTO
 
 # Loading and summarising the model:
 
-new_model = tf.keras.models.load_model('my_model_test.h5')
+new_model = tf.keras.models.load_model(MODEL_PREFIX+MODEL_NAME)
 new_model.summary()
 
 
