@@ -2,14 +2,8 @@ import keras.callbacks
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-import CustomCallback
-import numpy as np
-import PIL
-
 import tensorflow as tf
 import tensorflow_datasets as tfds
-
-import tensorboard
 
 
 # Method for logging the training of a network, with the aim of visualising using tensorboard:
@@ -184,5 +178,3 @@ plt.legend(loc="upper left")
 # Displaying the plot on the screen:
 
 plt.show()
-
-# hello there
