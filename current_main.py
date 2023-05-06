@@ -1,17 +1,18 @@
 import keras.callbacks
 import matplotlib.pyplot as plt
+from datetime import datetime
 import CustomCallback
 import numpy as np
 import PIL
 
 import tensorflow as tf
-
 import tensorflow_datasets as tfds
 
 batch_size = 64
-epochs = 128
+epochs = 256
 
 
+now = datetime.now()
 def resize_image(image, label):
     image = tf.image.convert_image_dtype(image, tf.float32)
     image = tf.image.resize(image, (256, 256))
@@ -37,12 +38,12 @@ model = tf.keras.models.Sequential()
 
 # Input Shape : width, height, colour channels
 model.add(tf.keras.layers.RandomFlip("horizontal", input_shape=(256, 256, 3)))
-#model.add(tf.keras.layers.RandomFlip("vertical"))
+model.add(tf.keras.layers.RandomFlip("vertical"))
 
-model.add(tf.keras.layers.RandomRotation(0.5))
-model.add(tf.keras.layers.RandomZoom(0.1))
-model.add(tf.keras.layers.RandomCrop(240, 240))
-model.add(tf.keras.layers.RandomTranslation(0.1, 0.1))
+model.add(tf.keras.layers.RandomRotation(0.9))
+model.add(tf.keras.layers.RandomZoom(0.3))
+model.add(tf.keras.layers.RandomCrop(230, 230))
+model.add(tf.keras.layers.RandomTranslation(0.3, 0.3))
 
 #model.add(tf.keras.layers.RandomWidth(0.2))
 
@@ -50,30 +51,51 @@ model.add(tf.keras.layers.RandomTranslation(0.1, 0.1))
 
 model.add(tf.keras.layers.Conv2D(16, (3, 3), 1, padding='same', activation='relu'))
 model.add(tf.keras.layers.MaxPooling2D())
+# model.add(tf.keras.layers.BatchNormalization())
 
 model.add(tf.keras.layers.Conv2D(32, (3, 3), 1, padding='same', activation='relu'))
 model.add(tf.keras.layers.MaxPooling2D())
 
 model.add(tf.keras.layers.Conv2D(64, (3, 3), 1, padding='same', activation='relu'))
 model.add(tf.keras.layers.MaxPooling2D())
-
+# model.add(tf.keras.layers.BatchNormalization())
 # model.add(tf.keras.layers.Conv2D(128, (3, 3), 1, padding='same', activation='relu'))
 
-model.add(tf.keras.layers.Dropout(0.2))
+model.add(tf.keras.layers.Dropout(0.4))
 
 model.add(tf.keras.layers.Flatten())
 
 model.add(tf.keras.layers.Dense(256, activation='relu'))
+model.add(tf.keras.layers.BatchNormalization())
+model.add(tf.keras.layers.Dropout(0.62))
+
 model.add(tf.keras.layers.Dense(102, activation='softmax'))
 
-model.compile('adam', loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+model.compile('adam', loss=tf.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
 
 model.summary()
+
+
+
 
 logdir = "logs"
 tensorboard_callback = CustomCallback.CustomCallback()
 
+start_time = now.strftime("%H:%M:%S")
+print("Start Time:", start_time)
+
 hist = model.fit(ds, epochs=epochs, validation_data=ds_val)
+
+
+
+
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+
+print("Start Time:", start_time)
+print("End Time:", current_time)
+
+model.save('models/model1')
 plt.figure()
 
 # plt.plot(hist.history['loss'], color='teal', label='training-loss')
