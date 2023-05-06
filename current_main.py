@@ -12,7 +12,7 @@ logdir = "logs/fit/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
 
 
-# Naming convention for saved models:
+# Naming convention for saved models, change to alter the name this model will be saved under:
 
 MODEL_PREFIX = "models/"
 MODEL_NAME = "model3.h5"
@@ -32,7 +32,7 @@ def resize_image(image, label):
     return (image, label)
 
 
-# Initialises the dataset and the validation dataset:
+# Initialising the dataset and the validation dataset:
 
 ds = tfds.load('oxford_flowers102', split='train', shuffle_files=True)
 ds_val = tfds.load('oxford_flowers102', split="validation", shuffle_files=True)
@@ -138,7 +138,7 @@ print("Start Time:", start_time)
 hist = model.fit(ds, epochs=epochs, validation_data=ds_val, callbacks=[tensorboard_callback])
 
 
-# Saves the current model to the program folders under the name in the brackets:
+# Saves the current model to the program folders under the name defined at the start of the program:
 
 model.save(MODEL_PREFIX+MODEL_NAME)
 
